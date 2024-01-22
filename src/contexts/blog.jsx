@@ -13,6 +13,7 @@ const defaultState = {
     createPost: (post) => {},
     updatePost: (id, post) => {},
     deletePost: (id) => {},
+    getCommentsForPost: (id) => {},
     createComment: (id, comment) => {},
 }
 
@@ -77,6 +78,18 @@ const BlogProvider = ({ children }) => {
         }
     }
 
+    const getCommentsForPost = async (id) => {
+        setCommentsLoading(true);
+        try {
+            const response = await Axios.get(`/blog/posts/${id}/comments`);
+            setComments(response.data);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setCommentsLoading(false);
+        }
+    }
+
     const createComment = async (id, data) => {
         try {
             const response = await Axios.post(`/blog/posts/${id}/comments`, data);
@@ -100,6 +113,7 @@ const BlogProvider = ({ children }) => {
                 createPost,
                 updatePost,
                 deletePost,
+                getCommentsForPost,
                 createComment,
             }}
         >

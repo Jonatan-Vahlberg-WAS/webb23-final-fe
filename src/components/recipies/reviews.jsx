@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { useUser } from "@/contexts/user";
 import { useRecipies } from "@/contexts/recipies";
 import { useEffect } from "react";
+import { formatTime } from "@/utils/datetime";
 
 export default function Reviews () {
     const user = useUser();
@@ -36,6 +37,7 @@ export default function Reviews () {
                 return (
                     <div className="p-4 border rounded-lg">
                         <h3 className="text-lg font-bold">{review.user.name}</h3>
+                        <p className="text-gray-500 dark:text-gray-400">{formatTime(review.createdAt)}</p>
                         <p>{review.review}</p>
                     </div>
                 )
