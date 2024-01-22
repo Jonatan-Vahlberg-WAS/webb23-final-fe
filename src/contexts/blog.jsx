@@ -1,3 +1,4 @@
+import Axios from '@/utils/axios';
 import { createContext, useContext, useState } from 'react';
 
 const defaultState = {
@@ -28,7 +29,7 @@ const BlogProvider = ({ children }) => {
     const getPosts = async (search) => {
         setPostsLoading(true);
         try {
-            const response = await Axios.get(`/posts${search ? `?search=${search}` : ""}`);
+            const response = await Axios.get(`/blog/posts${search ? `?search=${search}` : ""}`);
             setPosts(response.data);
         } catch (error) {
             console.log(error);
@@ -40,7 +41,7 @@ const BlogProvider = ({ children }) => {
     const getPost = async (id) => {
         setPostLoading(true);
         try {
-            const response = await Axios.get(`/posts/${id}`);
+            const response = await Axios.get(`/blog/posts/${id}`);
             setPost(response.data);
         } catch (error) {
             console.log(error);
@@ -51,7 +52,7 @@ const BlogProvider = ({ children }) => {
 
     const createPost = async (data) => {
         try {
-            const response = await Axios.post("/posts", data);
+            const response = await Axios.post("/blog/posts", data);
             setPosts([...posts, response.data]);
         } catch (error) {
             console.log(error);
@@ -60,7 +61,7 @@ const BlogProvider = ({ children }) => {
 
     const updatePost = async (id, data) => {
         try {
-            const response = await Axios.put(`/posts/${id}`, data);
+            const response = await Axios.put(`/blog/posts/${id}`, data);
             setPosts(posts.map((post) => post.id === id ? response.data : post));
         } catch (error) {
             console.log(error);
@@ -69,7 +70,7 @@ const BlogProvider = ({ children }) => {
 
     const deletePost = async (id) => {
         try {
-            await Axios.delete(`/posts/${id}`);
+            await Axios.delete(`/blog/posts/${id}`);
             setPosts(posts.filter((post) => post.id !== id));
         } catch (error) {
             console.log(error);
@@ -78,7 +79,7 @@ const BlogProvider = ({ children }) => {
 
     const createComment = async (id, data) => {
         try {
-            const response = await Axios.post(`/posts/${id}/comments`, data);
+            const response = await Axios.post(`/blog/posts/${id}/comments`, data);
             setComments([...comments, response.data]);
         } catch (error) {
             console.log(error);
