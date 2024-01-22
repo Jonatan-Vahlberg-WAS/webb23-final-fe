@@ -1,6 +1,7 @@
 import { createContext, useContext, useState } from 'react';
 
 import Axios from '@/utils/axios';
+import { useRouter } from 'next/navigation';
 
 const defaultState = {
     recipies: [],
@@ -13,6 +14,7 @@ const defaultState = {
     createRecipie: () => {},
     updateRecipie: () => {},
     deleteRecipie: () => {},
+    getRecipieReviews: () => {},
     createRecipieReview: () => {},
     deleteRecipieReview: () => {},
 }
@@ -20,7 +22,8 @@ const defaultState = {
 const RecipieContext = createContext(defaultState);
 
 const RecipieProvider = ({ children }) => {
-    
+        const router = useRouter();
+
         const [recipies, setRecipies] = useState(defaultState.recipies);
         const [recipiesLoading, setRecipiesLoading] = useState(defaultState.recipiesLoading);
         const [recipie, setRecipie] = useState(defaultState.recipie);
@@ -77,8 +80,22 @@ const RecipieProvider = ({ children }) => {
                 await Axios.delete(`/recipies/${id}`);
                 const newRecipies = recipies.filter((recipie) => recipie._id !== id);
                 setRecipies(newRecipies);
+                setRecipie(null);
+                router.push("/recipies");
             } catch (error) {
                 console.log(error);
+            }
+        }
+
+        const getRecipieReviews = async (id) => {
+            setRecipieLoading(true);
+            try {
+                const response = await Axios.get(`/recipies/${id}/reviews`);
+                setRecipieReviews(response.data);
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setRecipieLoading(false);
             }
         }
     
@@ -114,6 +131,7 @@ const RecipieProvider = ({ children }) => {
                     createRecipie,
                     updateRecipie,
                     deleteRecipie,
+                    getRecipieReviews,
                     createRecipieReview,
                     deleteRecipieReview,
                 }}

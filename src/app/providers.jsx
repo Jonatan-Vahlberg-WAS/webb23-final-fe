@@ -1,13 +1,16 @@
 "use client";
-import { RecipieProvider } from "../../contexts/recipies";
-import { UserProvider } from "../../contexts/user";
+import { BlogProvider } from "../contexts/blog";
+import { RecipieProvider } from "../contexts/recipies";
+import { UserProvider } from "../contexts/user";
 
 
 export const Providers = ({ children }) => {
     return (
         <UserProvider>
             <RecipieProvider>
-                {children}
+                <BlogProvider>
+                    {children}
+                </BlogProvider>
             </RecipieProvider>
         </UserProvider>
     );

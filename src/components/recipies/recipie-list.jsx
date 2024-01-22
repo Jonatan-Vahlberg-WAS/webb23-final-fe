@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import RecipieCard from "./recipie-card";
 import { ListPagination } from "../list-pagination";
-import { useRecipies } from "../../../contexts/recipies";
+import { useRecipies } from "../../contexts/recipies";
 import { useEffect } from "react";
 
 export function RecipieList() {

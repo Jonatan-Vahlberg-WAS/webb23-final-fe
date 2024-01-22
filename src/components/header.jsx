@@ -7,7 +7,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { usePathname } from "next/navigation";
 import { UserIcon } from "lucide-react";
-import { useUser } from "../../contexts/user";
+import { useUser } from "../contexts/user";
 
 export function Header() {
   const pathname = usePathname();
@@ -25,17 +25,17 @@ export function Header() {
         <nav className="sm:flex gap-4 sm:gap-6">
           <Link
             className="text-sm font-medium hover:underline underline-offset-4"
-            href="#">
+            href="/recipies">
             Recipes
           </Link>
           <Link
             className="text-sm font-medium hover:underline underline-offset-4"
-            href="#">
+            href="/blog">
             Blog
           </Link>
           <Link
             className="text-sm font-medium hover:underline underline-offset-4"
-            href="#">
+            href="/chat">
             Chat
           </Link>
         </nav>
