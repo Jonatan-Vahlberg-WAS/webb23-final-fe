@@ -1,6 +1,8 @@
 "use client";
-import { createContext, useState, useEffect, useContext } from 'react';
+import { createContext, useState, useContext } from 'react';
 import { useUser } from './user';
+import Axios from '@/utils/axios';
+import { useRouter } from 'next/navigation';
 
 const defaultState = {
     conversations: [],
@@ -10,7 +12,7 @@ const defaultState = {
     messages: [],
     messagesLoading: true,
     getConversations: () => {},
-    getConversation: () => {},
+    getConversation: (id) => {},
     createConversation: (conversation) => {},
     deleteConversation: (id) => {},
     getMessagesForConversation: () => {},
@@ -21,6 +23,7 @@ const defaultState = {
 const ChatContext = createContext(defaultState);
 
 const ChatProvider = ({ children }) => {
+    const router = useRouter();
     const user = useUser();
     const [conversations, setConversations] = useState(defaultState.conversations);
     const [conversation, setConversation] = useState(defaultState.conversation);
@@ -32,7 +35,7 @@ const ChatProvider = ({ children }) => {
     const getConversations = async () => {
         setConversationsLoading(true);
         try {
-            const response = await AxiosClient.get("/conversations");
+            const response = await Axios.get("/chat/conversations");
             setConversations(response.data);
         } catch (error) {
             console.log(error);
@@ -44,7 +47,7 @@ const ChatProvider = ({ children }) => {
     const getConversation = async (id) => {
         setConversationLoading(true);
         try {
-            const response = await AxiosClient.get(`/conversations/${id}`);
+            const response = await Axios.get(`/chat/conversations/${id}`);
             setConversation(response.data);
         } catch (error) {
             console.log(error);
@@ -55,8 +58,9 @@ const ChatProvider = ({ children }) => {
 
     const createConversation = async (data) => {
         try {
-            const response = await AxiosClient.post("/conversations", data);
+            const response = await Axios.post("/chat/conversations", data);
             setConversations([...conversations, response.data]);
+            router.push(`/chat/${response.data._id}`);
         } catch (error) {
             console.log(error);
         }
@@ -64,7 +68,7 @@ const ChatProvider = ({ children }) => {
 
     const deleteConversation = async (id) => {
         try {
-            await AxiosClient.delete(`/conversations/${id}`);
+            await Axios.delete(`/conversations/${id}`);
             setConversations(conversations.filter((conversation) => conversation._id !== id));
         } catch (error) {
             console.log(error);
@@ -74,7 +78,7 @@ const ChatProvider = ({ children }) => {
     const getMessagesForConversation = async (id) => {
         setMessagesLoading(true);
         try {
-            const response = await AxiosClient.get(`/conversations/${id}/messages`);
+            const response = await Axios.get(`/chat/conversations/${id}/messages`);
             setMessages(response.data);
         } catch (error) {
             console.log(error);
@@ -85,7 +89,7 @@ const ChatProvider = ({ children }) => {
 
     const createMessage = async (data) => {
         try {
-            const response = await AxiosClient.post(`/conversations/${conversation._id}/messages`, data);
+            const response = await Axios.post(`/chat/conversations/${conversation._id}/messages`, data);
             setMessages([...messages, response.data]);
         } catch (error) {
             console.log(error);
@@ -94,21 +98,16 @@ const ChatProvider = ({ children }) => {
 
     const deleteMessage = async (id) => {
         try {
-            await AxiosClient.delete(`/conversations/${conversation._id}/messages/${id}`);
+            await Axios.delete(`/chat/messages/${id}`);
             setMessages(messages.filter((message) => message._id !== id));
         }
         catch (error) {
             console.log(error);
         }
     }
-    if(!user.user) return (
-        <ChatContext.Provider value={defaultState}>
-            {children}
-        </ChatContext.Provider>
-    )
     return (
         <ChatContext.Provider
-            value={{
+            value={user.user ? {
                 conversations,
                 conversation,
                 conversationsLoading,
@@ -122,10 +121,21 @@ const ChatProvider = ({ children }) => {
                 getMessagesForConversation,
                 createMessage,
                 deleteMessage,
-            }}
+            } : defaultState}
         >
             {children}
         </ChatContext.Provider>
     );
 
 }
+
+const useChat = () => {
+    const context = useContext(ChatContext);
+    if (context === undefined) {
+        throw new Error('useChat must be used within a ChatProvider');
+    }
+    return context;
+}
+
+
+export { ChatProvider, useChat };

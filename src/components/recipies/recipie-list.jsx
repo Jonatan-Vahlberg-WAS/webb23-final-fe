@@ -15,7 +15,7 @@ export function RecipieList() {
   useEffect(() => {
     recipies.getRecipies();
   }, []);
-  console.log(recipies.recipies);
+
   return (
     (<section className="w-full py-12">
       <div
