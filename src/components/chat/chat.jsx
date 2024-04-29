@@ -7,12 +7,14 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useChat } from "@/contexts/chat";
 import { formatTime } from "@/utils/datetime";
+import { useEffect } from "react";
+import { useUser } from "@/contexts/user";
+import MessageAvatar from "./message-avatar";
 
 export default function Chat() {
   const chat = useChat()
-
-  const { messages } = { messages: [] };
-
+  const { messages } = chat;
+  console.log(messages);
   const createMessage = (e) => {
     e.preventDefault();
     const message = e.target["message"].value;
@@ -20,14 +22,14 @@ export default function Chat() {
       message
     })
   }
-
+  
   return (
-    <div className="flex flex-col h-[50vh] bg-white m-24 p-4">
+    <div className="flex flex-col h-[50vh] w-[75vw] bg-white m-24 p-4">
       <header
         className="flex h-14 items-center border-b">
         <h1 className="text-lg font-semibold">Chat</h1>
       </header>
-      <main className="flex-1 overflow-auto p-4 space-y-4">
+      <div className="flex-1 overflow-auto p-4 space-y-4">
         {messages.map((message) => (
 
           <div className="flex items-start space-x-2">
@@ -43,7 +45,7 @@ export default function Chat() {
           </div>
         </div>
           ))}
-      </main>
+      </div>
       <footer className="border-t p-4">
         <form className="flex space-x-2" onSubmit={createMessage}>
           <Input placeholder="Type your message here." type="text" id="message" name="message" />

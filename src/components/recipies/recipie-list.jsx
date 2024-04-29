@@ -9,8 +9,11 @@ import RecipieCard from "./recipie-card";
 import { ListPagination } from "../list-pagination";
 import { useRecipies } from "../../contexts/recipies";
 import { useEffect } from "react";
+import RecipieForm from "./recipie-form";
+import { useUser } from "@/contexts/user";
 
 export function RecipieList() {
+  const user = useUser();
   const recipies = useRecipies();
   useEffect(() => {
     recipies.getRecipies();
@@ -56,6 +59,9 @@ export function RecipieList() {
             onPageChange={() => {}}
             />
         </div> */}
+        {user.user && (
+          <RecipieForm />
+        )}
       </div>
     </section>)
   );

@@ -7,7 +7,7 @@ export default function MessageAvatar({ user, showBadge = false }) {
     <Avatar className="h-9 w-9 relative overflow-visible">
         <AvatarImage alt="@shadcn" src="/placeholder-user.jpg" />
         <AvatarFallback>
-        {user.name[0]}
+        {user?.name?.[0]}
         </AvatarFallback>
         {showBadge && (
             <Badge

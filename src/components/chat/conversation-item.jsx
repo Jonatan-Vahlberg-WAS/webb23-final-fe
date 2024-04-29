@@ -7,6 +7,7 @@ import MessageAvatar from "./message-avatar";
 
 export function ConversationItem({ conversation, user }) {
     const recipient = conversation.recipients.find(r => r._id !== user._id);
+    console.log("REC",conversation.lastMessage);
     if(!recipient) {
         return null;
     }
@@ -28,7 +29,7 @@ export function ConversationItem({ conversation, user }) {
             </div>
           </div>
           <div className="line-clamp-1 text-sm">{
-              conversation.lastMessage ? conversation.lastMessage.content : ""
+              conversation.lastMessage ? conversation.lastMessage.message : ""
           }</div>
         </div>
         <Link href={`/chat/${conversation._id}`}>
